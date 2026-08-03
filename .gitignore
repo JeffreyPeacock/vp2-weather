@@ -1,0 +1,11 @@
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+*.pyc
+
+# IDE
+.idea/
+
+# Claude Code local settings
+.claude/settings.local.json
