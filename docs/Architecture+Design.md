@@ -174,13 +174,55 @@ Archived in this directory:
   wxforum topic 10721 page 2 (af4ex's XBee build, replies #25–49),
   including the expansion-connector pinout diagram and cable photos.
 
-External:
+External — the console hack lineage:
 
-- MadScientistLabs, *Davis WeatherLink Software Not Required* (Jan 2011):
+- MadScientistLabs, *Davis WeatherLink Software Not Required* (Jan 2011) —
+  DeKay's original discovery of direct 3.3V serial on the expansion port:
   <https://madscientistlabs.blogspot.com/2011/01/davis-weatherlink-software-not-required.html>
-- DeKay's DavisRFM69 wiki, Hardware Hacks:
+- wxforum topic 10721, *Vantage Vue Console logger pinout* — af4ex's XBee
+  wireless build (replies #25–49; source of the archived PDF above):
+  <https://www.wxforum.net/index.php?topic=10721.msg104689#msg104689>
+- DeKay's DavisRFM69 wiki, Hardware Hacks — index of console interface
+  hacks, incl. the firmware ≥3.0 authentic-logger restriction:
   <https://github.com/dekay/DavisRFM69/wiki/Hardware-Hacks>
+
+External — Davis documentation:
+
+- Vantage Serial Protocol reference, v2.30 mirror (local copies of
+  v2.30/2.50/2.61 are archived in this directory):
+  <https://wiki.greengaragedetroit.com/images/e/e4/VantageSerialProtocolDocs_v230.pdf>
+- Vantage Pro/Pro2 Serial Communication Reference Manual (ManualsLib):
+  <https://www.manualslib.com/manual/586601/Davis-Vantage-Pro.html>
+- Vantage Pro2 Console User Manual (ManualsLib):
+  <https://www.manualslib.com/manual/35985/Davis-Vantage-Pro2.html>
+
+External — hardware (SparkFun):
+
 - BlueSMiRF v2 hookup guide: <https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/>
-- WU PWS Upload Protocol: <https://support.weather.com/s/article/PWS-Upload-Protocol>
+  — esp. hardware overview
+  (<https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/hardware_overview/>)
+  and AT command reference
+  (<https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/at_commands/>);
+  firmware/hardware repo: <https://github.com/sparkfun/SparkFun_BlueSMiRF-v2>
+- FTDI Basic Breakout 5V: <https://www.sparkfun.com/sparkfun-ftdi-basic-breakout-5v.html>
+  and 3.3V: <https://www.sparkfun.com/sparkfun-ftdi-basic-breakout-3-3v.html>
+  — the 3.3V variant is DeKay's wired-hookup adapter; either configures the BSv2.
+- *Exploring XBees and XCTU* — configuration of the original XBee S1 link
+  this project replaces:
+  <https://learn.sparkfun.com/tutorials/exploring-xbees-and-xctu>
+
+External — Weather Underground upload protocol:
+
+- PWS Upload Protocol (official):
+  <https://support.weather.com/s/article/PWS-Upload-Protocol?language=en_US>
+- meteodrenthe, *Uploading to the Weather Underground API* — readable
+  parameter walkthrough (the official page is a JS-only portal):
+  <https://blog.meteodrenthe.nl/2021/12/27/uploading-to-the-weather-underground-api/>
+- ccgruber/updateweatherstation — endpoint emulation, parameter/response
+  cross-reference:
+  <https://github.com/ccgruber/updateweatherstation/blob/master/updateweatherstation.php>
+
+Local:
+
 - Java predecessor: `~/Workspace/Sensorcast/sensorcast-main/sensorcast-vantage-pro2`
   (`VantagePro2Driver.java`, `WundergroundUpdater.java`, `DavisLoopData_Type0/1.java`)
