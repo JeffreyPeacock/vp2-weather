@@ -119,3 +119,47 @@ cat archive.jsonl | wu-upload --period 0        # replay/backfill
 | `docs/Architecture+Design.md` | architecture, contract spec, decisions D1–D15 |
 | `docs/*.pdf` | Davis serial protocol manuals (v2.30/2.50/2.61), console and ISS spec sheets, archived pinout thread |
 | `CLAUDE.md` | terse working notes for AI-assisted sessions |
+
+## References
+
+All the sources this project was researched and built from.
+
+### The console hack lineage
+
+- [MadScientistLabs: Davis WeatherLink Software Not Required (Jan 2011)](https://madscientistlabs.blogspot.com/2011/01/davis-weatherlink-software-not-required.html)
+  — DeKay's original discovery: direct 3.3V serial on the expansion port.
+- [wxforum topic 10721: Vantage Vue Console logger pinout](https://www.wxforum.net/index.php?topic=10721.msg104689#msg104689)
+  — af4ex's XBee wireless build (replies #25–49, with the expansion
+  connector pinout diagram); archived locally as
+  [`docs/wxforum-topic-10721-vantage-console-pinout-p2.pdf`](docs/wxforum-topic-10721-vantage-console-pinout-p2.pdf).
+- [DeKay's DavisRFM69 wiki: Hardware Hacks](https://github.com/dekay/DavisRFM69/wiki/Hardware-Hacks)
+  — index of console interface hacks, including the firmware ≥3.0
+  authentic-logger restriction.
+
+### Davis documentation
+
+- [Vantage Serial Protocol reference, v2.30 mirror (PDF)](https://wiki.greengaragedetroit.com/images/e/e4/VantageSerialProtocolDocs_v230.pdf)
+  — v2.30/2.50/2.61 are archived locally in [`docs/`](docs/).
+- [Vantage Pro/Pro2 Serial Communication Reference Manual (ManualsLib)](https://www.manualslib.com/manual/586601/Davis-Vantage-Pro.html)
+- [Vantage Pro2 Console User Manual (ManualsLib)](https://www.manualslib.com/manual/35985/Davis-Vantage-Pro2.html)
+
+### Hardware (SparkFun)
+
+- [BlueSMiRF v2 hookup guide](https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/)
+  — esp. [hardware overview](https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/hardware_overview/)
+  and [AT command reference](https://docs.sparkfun.com/SparkFun_BlueSMiRF-v2/at_commands/);
+  firmware/hardware repo: [sparkfun/SparkFun_BlueSMiRF-v2](https://github.com/sparkfun/SparkFun_BlueSMiRF-v2).
+- [FTDI Basic Breakout 5V](https://www.sparkfun.com/sparkfun-ftdi-basic-breakout-5v.html)
+  and [FTDI Basic Breakout 3.3V](https://www.sparkfun.com/sparkfun-ftdi-basic-breakout-3-3v.html)
+  — the 3.3V variant is DeKay's wired-hookup adapter; either configures
+  the BSv2.
+- [Exploring XBees and XCTU](https://learn.sparkfun.com/tutorials/exploring-xbees-and-xctu)
+  — configuration of the original XBee Series 1 link this project replaces.
+
+### Weather Underground upload protocol
+
+- [PWS Upload Protocol (official, support.weather.com)](https://support.weather.com/s/article/PWS-Upload-Protocol?language=en_US)
+- [meteodrenthe: Uploading to the Weather Underground API](https://blog.meteodrenthe.nl/2021/12/27/uploading-to-the-weather-underground-api/)
+  — readable parameter walkthrough (the official page is a JS-only portal).
+- [ccgruber/updateweatherstation](https://github.com/ccgruber/updateweatherstation/blob/master/updateweatherstation.php)
+  — endpoint emulation, useful as a parameter/response cross-reference.
