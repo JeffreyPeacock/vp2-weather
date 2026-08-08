@@ -54,7 +54,8 @@ def main() -> int:
 
     print(f"opening {args.port} (this initiates the Bluetooth connection)...")
     try:
-        port = serial.Serial(args.port, baudrate=115200, timeout=0.5)
+        port = serial.Serial(args.port, baudrate=115200, timeout=0.5,
+                             write_timeout=3.0)
     except serial.SerialException as exc:
         print(f"cannot open {args.port}: {exc}", file=sys.stderr)
         print("is the radio paired and bound? e.g.: sudo rfcomm bind 0 <bt-addr>",
@@ -62,15 +63,29 @@ def main() -> int:
         return 1
 
     with port:
-        print("knocking with $$$ (waiting for the command window)...")
-        deadline = time.monotonic() + DEADLINE_S
+        print("knocking with $$$ every few seconds (window is 60s from "
+              "radio power-on)...")
+        start = time.monotonic()
         while True:
-            if time.monotonic() > deadline:
-                print("gave up: no OK within the deadline. Power-cycle the "
-                      "radio and rerun this script right away.", file=sys.stderr)
+            elapsed = time.monotonic() - start
+            if elapsed > DEADLINE_S:
+                print("\ngave up: no OK within the deadline.\n"
+                      "  - If knocks were sent: the 60s window was probably "
+                      "already closed.\n    Power-cycle the radio and rerun "
+                      "immediately.", file=sys.stderr)
                 return 1
             port.reset_input_buffer()
-            port.write(b"$$$")
+            try:
+                port.write(b"$$$")
+            except serial.SerialTimeoutException:
+                print("\nwrite blocked: no working Bluetooth link to the "
+                      "radio.\n  - Factory reset erases pairing; re-pair "
+                      "first (bluetoothctl: remove, scan on, pair).\n"
+                      "  - Check: bluetoothctl info <bt-addr>  (Paired: yes?)\n"
+                      "  - Check: rfcomm  (shows the binding and state)",
+                      file=sys.stderr)
+                return 1
+            print(f"  knock at {elapsed:4.1f}s...", flush=True)
             if b"OK" in read_until(port, b"OK", ESCAPE_RETRY_S):
                 print("  in command mode.")
                 break
