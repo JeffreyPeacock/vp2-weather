@@ -50,6 +50,8 @@ def main() -> int:
                         help="Bluetooth serial device (default: /dev/rfcomm0)")
     parser.add_argument("--speed", type=int, default=19200,
                         help="UART baud to set on the radio (default: 19200)")
+    parser.add_argument("--query", action="store_true",
+                        help="report current settings instead of changing them")
     args = parser.parse_args()
 
     print(f"opening {args.port} (this initiates the Bluetooth connection)...")
@@ -89,6 +91,13 @@ def main() -> int:
             if b"OK" in read_until(port, b"OK", ESCAPE_RETRY_S):
                 print("  in command mode.")
                 break
+
+        if args.query:
+            for cmd in ("AT-SerialSpeed?", "ATS", "ATB"):
+                command(port, cmd, timeout=3.0)
+            command(port, "ATZ", timeout=1.0)  # reboot, nothing saved/changed
+            print("query done; radio rebooting (settings untouched).")
+            return 0
 
         ok = command(port, f"AT-SerialSpeed={args.speed}")
         ok = command(port, "ATW") and ok      # save to NVM
