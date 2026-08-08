@@ -118,7 +118,7 @@ cat archive.jsonl | wu-upload --period 0        # replay/backfill
 | `docs/BSv2-Setup.md` | hardware: attach the BlueSMiRF v2 to the console |
 | `docs/Architecture+Design.md` | architecture, contract spec, decisions D1–D15 |
 | `docs/*.pdf` | Davis serial protocol manuals (v2.30/2.50/2.61), console and ISS spec sheets, archived pinout thread |
-| `CLAUDE.md` | terse working notes for AI-assisted sessions |
+| `AGENTS.md` | terse working notes for AI-assisted sessions |
 
 ## References
 

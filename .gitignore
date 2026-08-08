@@ -7,5 +7,5 @@ __pycache__/
 # IDE
 .idea/
 
-# Claude Code local settings
-.claude/settings.local.json
+# Local tool settings
+.*/settings.local.json
