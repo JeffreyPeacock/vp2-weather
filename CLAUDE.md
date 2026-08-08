@@ -1,4 +1,4 @@
-# AGENTS.md
+# CLAUDE.md
 
 Davis Vantage Pro 2 console → BlueSMiRF v2 (Bluetooth) → laptop pipeline
 that publishes to Weather Underground. Python 3.12, hatchling, distribution
