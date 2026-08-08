@@ -63,6 +63,26 @@ This mismatch produces exactly the observed symptom: power but no data.
    desktop↔laptop bench test, but at the new rate). Any remaining problem
    at the console is then wiring, not the radio.
 
+### Alternative: configure over Bluetooth (no FTDI, radio stays on the console)
+
+The BSv2 also accepts `$$$` from the Bluetooth side, but only within the
+same 60-second window after power-on (firmware checks
+`millis() < maxCommandTime_ms`; escapes are also ignored until there's
+been 2 s of serial silence — automatic here, the console is quiet unless
+polled). Order matters because the factory reset erases pairings:
+
+1. Radio attached to the console and powered; factory-reset it (Step 1).
+2. Pair the desktop with the radio — no deadline on this step.
+3. Bind it once: `sudo rfcomm bind 0 <bt-addr>`.
+4. Power-cycle the radio (pull console power or the VCC wire) to restart
+   the 60-second window, then immediately run
+   [`scripts/bsv2-config.py`](../scripts/bsv2-config.py) — it opens
+   `/dev/rfcomm0` (which triggers the reconnect), knocks with `$$$`
+   until command mode opens, then sets 19200, saves, and exits.
+
+Changing the UART speed over Bluetooth does not drop the Bluetooth
+connection — the two sides are independent.
+
 ## Step 3 — Wire the BSv2 to the console expansion port
 
 Four wires to serial port 0 on the 2x10, 2mm-pitch expansion connector.
