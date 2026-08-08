@@ -65,12 +65,19 @@ class VantageConsole:
     def read_pair(self) -> tuple[dict, dict]:
         """One (LOOP, LOOP2) decoded pair via `LPS 3 2`."""
         got: dict[int, dict] = {}
+        last_err = "no ACK for LPS"
         for _ in range(3):  # a retry budget for CRC drops / missing type
             self._port.reset_input_buffer()
             self._port.write(b"LPS 3 2\n")
-            first = self._port.read(1)
+            # Scan for the ACK rather than demanding it first: a radio in
+            # echo mode reflects our own command bytes before the ACK.
+            for _ in range(16):
+                first = self._port.read(1)
+                if not first or first == bytes([ACK]):
+                    break
             if first != bytes([ACK]):
-                raise ConsoleError(f"no ACK for LPS, got {first!r}")
+                last_err = f"no ACK for LPS, last byte {first!r}"
+                continue
             for _ in range(2):
                 packet = self._read_packet()
                 if packet is None or not crc.check(packet):
@@ -82,7 +89,8 @@ class VantageConsole:
                     got[1] = packets.decode_loop2(packet)
             if 0 in got and 1 in got:
                 return got[0], got[1]
-        raise ConsoleError("could not collect a clean LOOP/LOOP2 pair")
+            last_err = "packets failed CRC or a type was missing"
+        raise ConsoleError(f"could not collect a clean LOOP/LOOP2 pair: {last_err}")
 
     def _read_packet(self) -> bytes | None:
         """Align on the "LOO" prefix, then read the fixed 99-byte packet."""

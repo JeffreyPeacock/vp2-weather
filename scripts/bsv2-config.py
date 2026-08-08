@@ -92,12 +92,16 @@ def main() -> int:
 
         ok = command(port, f"AT-SerialSpeed={args.speed}")
         ok = command(port, "ATW") and ok      # save to NVM
-        command(port, "ATX", timeout=1.0)     # exit command mode (may not echo OK)
+        # Reboot instead of ATX: ATX can leave the radio echoing over
+        # Bluetooth, which corrupts the transparent data path. A reboot
+        # (settings already saved) always lands in clean data mode.
+        command(port, "ATZ", timeout=1.0)     # reply may be cut off by reboot
 
         if not ok:
             print("configuration NOT confirmed — rerun to retry.", file=sys.stderr)
             return 1
-        print(f"done: radio UART set to {args.speed} 8N1 and saved.")
+        print(f"done: radio UART set to {args.speed} 8N1, saved, rebooting "
+              "into data mode (Bluetooth will drop and re-pair/reconnect).")
         return 0
 
 
