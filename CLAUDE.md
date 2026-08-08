@@ -9,9 +9,13 @@ that publishes to Weather Underground. Python 3.12, hatchling, distribution
 ```sh
 uv venv && uv pip install -e '.[dev]'   # or python -m venv + pip
 .venv/bin/pytest tests/ -q              # all tests must pass
-vp2-read --port /dev/rfcomm0 --count 1  # one Weather Report from the console
-vp2-read --port /dev/rfcomm0 | wu-upload   # the full pipeline
+scripts/vp2-read --port /dev/rfcomm0 --count 1   # one Weather Report
+scripts/vp2-read --port /dev/rfcomm0 | scripts/wu-upload   # full pipeline
 ```
+
+Executables live in `scripts/` (bash launchers that use the project venv;
+also `bsv2-config.py`, `vp2-probe.py`). Do NOT add [project.scripts]
+entry points — Jeff wants no project scripts generated into .venv/bin.
 
 WU credentials come from `$WU_STATION_ID` / `$WU_STATION_KEY` — never
 hardcode them (the Java predecessor did; that's decision D13).

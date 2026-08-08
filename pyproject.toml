@@ -11,10 +11,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 
-[project.scripts]
-vp2-read = "vantage_reader.cli:main"
-wu-upload = "wu_uploader.cli:main"
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

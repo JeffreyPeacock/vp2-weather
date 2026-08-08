@@ -67,6 +67,11 @@ src/
     wunderground.py              # WU PWS client (Observation, upload)
     mapping.py                   # Weather Report → Observation
     cli.py                       # wu-upload
+scripts/
+  vp2-read, wu-upload            # launchers (venv python -m <pkg>.cli);
+                                 #   no [project.scripts] entry points by design
+  bsv2-config.py                 # BlueSMiRF v2 over-Bluetooth configuration
+  vp2-probe.py                   # raw wakeup probe for wiring/baud triage
 ```
 
 They ship in one wheel (`vp2-weather`) for convenience; the dependency

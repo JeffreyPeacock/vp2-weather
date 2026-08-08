@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Launcher for the console reader (src/vantage_reader/cli.py) using the
+# project venv — no activation needed. Run from anywhere.
+VENV="$(dirname "$0")/../.venv"
+[ -x "$VENV/bin/python" ] || { echo "no venv: run 'python -m venv .venv && .venv/bin/pip install -e .' in the project root" >&2; exit 1; }
+exec "$VENV/bin/python" -m vantage_reader.cli "$@"

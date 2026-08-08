@@ -94,17 +94,19 @@ pytest
 export WU_STATION_ID=KXXXXXXXX
 export WU_STATION_KEY=xxxxxxxx
 
-# the pipeline
-vp2-read --port /dev/rfcomm0 --station-id my-vp2 --interval 60 | wu-upload
+# the pipeline (scripts use the project venv; no activation needed)
+scripts/vp2-read --port /dev/rfcomm0 --station-id my-vp2 --interval 60 | scripts/wu-upload
 ```
 
 Useful variations:
 
 ```sh
-vp2-read --port /dev/rfcomm0 --count 1          # smoke test: one report
-vp2-read ... | tee -a wx-$(date +%Y-%m).jsonl | wu-upload   # archive + upload
-wu-upload --tempf 70.2 --humidity 55            # test WU creds, no console
-cat archive.jsonl | wu-upload --period 0        # replay/backfill
+scripts/vp2-read --port /dev/rfcomm0 --count 1  # smoke test: one report
+scripts/vp2-read ... | tee -a wx-$(date +%Y-%m).jsonl | scripts/wu-upload
+scripts/wu-upload --tempf 70.2 --humidity 55    # test WU creds, no console
+cat archive.jsonl | scripts/wu-upload --period 0   # replay/backfill
+scripts/bsv2-config.py                          # set the radio's UART to 19200
+scripts/vp2-probe.py                            # raw wakeup probe (wiring/baud triage)
 ```
 
 ## Repository map
@@ -114,6 +116,7 @@ cat archive.jsonl | wu-upload --period 0        # replay/backfill
 | `src/weather_report/` | the Weather Report contract (`weather-report/1`) |
 | `src/vantage_reader/` | Davis serial protocol → reports (`vp2-read`) |
 | `src/wu_uploader/` | reports → Weather Underground (`wu-upload`) |
+| `scripts/` | the executables: `vp2-read`, `wu-upload`, `bsv2-config.py`, `vp2-probe.py` |
 | `tests/` | CRC, packet-decode, schema, and mapping tests |
 | `docs/BSv2-Setup.md` | hardware: attach the BlueSMiRF v2 to the console |
 | `docs/Architecture+Design.md` | architecture, contract spec, decisions D1–D15 |
