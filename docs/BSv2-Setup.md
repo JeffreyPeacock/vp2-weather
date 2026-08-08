@@ -65,11 +65,13 @@ This mismatch produces exactly the observed symptom: power but no data.
 
 ### Alternative: configure over Bluetooth (no FTDI, radio stays on the console)
 
-The BSv2 also accepts `$$$` from the Bluetooth side, but only within the
-same 60-second window after power-on (firmware checks
-`millis() < maxCommandTime_ms`; escapes are also ignored until there's
+The BSv2 also accepts a command-mode escape from the Bluetooth side —
+but the remote escape sequence is **`+++`**, not `$$$` (firmware:
+`btEscapeCharacter = '+'` for Bluetooth vs `escapeCharacter = '$'` for
+the wired UART). Same 60-second window after power-on
+(`millis() < maxCommandTime_ms`); escapes are also ignored until there's
 been 2 s of serial silence — automatic here, the console is quiet unless
-polled). Order matters because the factory reset erases pairings:
+polled. Order matters because the factory reset erases pairings:
 
 1. Radio attached to the console and powered; factory-reset it (Step 1).
 2. Pair the desktop with the radio — no deadline on this step.
@@ -77,7 +79,7 @@ polled). Order matters because the factory reset erases pairings:
 4. Power-cycle the radio (pull console power or the VCC wire) to restart
    the 60-second window, then immediately run
    [`scripts/bsv2-config.py`](../scripts/bsv2-config.py) — it opens
-   `/dev/rfcomm0` (which triggers the reconnect), knocks with `$$$`
+   `/dev/rfcomm0` (which triggers the reconnect), knocks with `+++`
    until command mode opens, then sets 19200, saves, and exits.
 
 Changing the UART speed over Bluetooth does not drop the Bluetooth
@@ -140,8 +142,9 @@ Serial Protocol* doc; MadScientistLabs):
 5. Console firmware ≥3.0 refuses serial without an authentic-logger
    handshake — only relevant if the console firmware was updated since the
    XBee rig worked.
-6. Avoid sending `$$$` patterns from the laptop within the first 60 s of
-   BSv2 power-up (command-mode escape).
+6. Avoid sending `+++` patterns from the laptop within the first 60 s of
+   BSv2 power-up (the Bluetooth-side command-mode escape; `$$$` is the
+   escape on the wired UART side only).
 
 ## References
 

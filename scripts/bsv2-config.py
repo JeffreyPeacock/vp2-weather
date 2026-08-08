@@ -2,9 +2,9 @@
 """Configure a BlueSMiRF v2 over Bluetooth inside its 60-second command
 window.
 
-The BSv2 only honors the $$$ escape while millis() < 60000 (AT-MaxCommandTimeMs),
+The BSv2 only honors the +++ escape while millis() < 60000 (AT-MaxCommandTimeMs),
 so: pair the radio first, power-cycle it, then run this script immediately.
-It keeps knocking with $$$ (respecting the 2-second serial-silence rule)
+It keeps knocking with +++ (respecting the 2-second serial-silence rule)
 until command mode opens, then sets the UART speed, saves, and exits.
 
     ./bsv2-config.py                       # /dev/rfcomm0 -> 19200 baud
@@ -63,7 +63,7 @@ def main() -> int:
         return 1
 
     with port:
-        print("knocking with $$$ every few seconds (window is 60s from "
+        print("knocking with +++ every few seconds (window is 60s from "
               "radio power-on)...")
         start = time.monotonic()
         while True:
@@ -76,7 +76,7 @@ def main() -> int:
                 return 1
             port.reset_input_buffer()
             try:
-                port.write(b"$$$")
+                port.write(b"+++")
             except serial.SerialTimeoutException:
                 print("\nwrite blocked: no working Bluetooth link to the "
                       "radio.\n  - Factory reset erases pairing; re-pair "
