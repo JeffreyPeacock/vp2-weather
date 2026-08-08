@@ -20,12 +20,12 @@ holder and want a copy removed, open an issue and it will be taken down.
 
 | File | What | Source |
 |---|---|---|
+| `wxforum-topic-10721-vantage-console-pinout-p2.pdf` | archival capture (2026-08-02) of wxforum topic 10721 page 2 — af4ex's XBee console interface build, replies #25–49, incl. the expansion-connector pinout diagram | <https://www.wxforum.net/index.php?topic=10721.msg104689#msg104689> |
+| `6152_62_53_63_SS.pdf` | Vantage Pro2 station spec sheet (models 6152/6162/6153/6163) | Davis Instruments; originally <http://www.davisnet.com/product_documents/weather/spec_sheets/6152_62_53_63_SS.pdf> |
 | `VantageSerialProtocolDocs_v261.pdf` | Davis *Vantage Serial Protocol* reference, rev 2.6.1 (2013) | Davis Instruments; originally <http://www.davisnet.com/support/weather/download/VantageSerialProtocolDocs_v261.pdf> (now via <https://www.davisinstruments.com/pages/support>) |
 | `VantageSerialProtocolDocs_v250.pdf` | same, rev 2.5.0 | Davis Instruments, same download area as above |
 | `VantageSerialProtocolDocs_v230.pdf` | same, rev 2.3.0 | Davis Instruments; a public mirror: <https://wiki.greengaragedetroit.com/images/e/e4/VantageSerialProtocolDocs_v230.pdf> |
-| `6152_62_53_63_SS.pdf` | Vantage Pro2 station spec sheet (models 6152/6162/6153/6163) | Davis Instruments; originally <http://www.davisnet.com/product_documents/weather/spec_sheets/6152_62_53_63_SS.pdf> |
 | `VP2_Fan_Aspirated_ISS_Rev_C.pdf` | VP2 fan-aspirated ISS spec sheet, rev C | Davis Instruments; originally <http://www.davisnet.com/product_documents/weather/spec_sheets/VP2_Fan_Aspirated_ISS_Rev_C.pdf> |
-| `wxforum-topic-10721-vantage-console-pinout-p2.pdf` | archival capture (2026-08-02) of wxforum topic 10721 page 2 — af4ex's XBee console interface build, replies #25–49, incl. the expansion-connector pinout diagram | <https://www.wxforum.net/index.php?topic=10721.msg104689#msg104689> |
 
 Notes:
 
