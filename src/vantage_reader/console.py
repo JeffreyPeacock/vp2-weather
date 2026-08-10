@@ -43,24 +43,51 @@ class VantageConsole:
     def __exit__(self, *exc):
         self.close()
 
+    def _scan_for(self, patterns: tuple[bytes, ...], max_bytes: int = 256) -> bool:
+        """Read bytes (each waits up to the port timeout, like the Java
+        driver's per-byte semantics) discarding garbage until one of the
+        patterns appears. Garbage tolerance matters on a marginal link."""
+        window = b""
+        for _ in range(max_bytes):
+            byte = self._port.read(1)
+            if not byte:
+                return False  # line went quiet for a full timeout
+            window = (window + byte)[-8:]
+            if any(p in window for p in patterns):
+                return True
+        return False
+
     def wake(self) -> None:
-        """Davis-documented wakeup: send LF, expect LF CR, retry up to 3x."""
+        """Davis-documented wakeup: send LF, scan for LF CR, retry up to 3x.
+
+        Mirrors the proven Java driver: junk bytes before the \\n\\r are
+        skipped rather than failing the attempt.
+        """
         for _ in range(WAKE_ATTEMPTS):
             self._port.reset_input_buffer()
             self._port.write(b"\n")
-            answer = self._port.read(2)
-            if b"\n" in answer:  # console answers \n\r
+            if self._scan_for((b"\n\r",)):
                 return
             time.sleep(WAKE_WAIT_S)
         raise ConsoleError("console did not wake (is it connected and powered?)")
 
     def test(self) -> None:
-        """TEST echo — cheap sanity check that commands round-trip."""
+        """TEST echo — sanity check that commands round-trip.
+
+        Like the Java driver, a bare \\n\\r response (echo lost, console
+        awake) is accepted as success.
+        """
         self._port.reset_input_buffer()
         self._port.write(b"TEST\n")
-        answer = self._port.read(8)
-        if b"TEST" not in answer:
-            raise ConsoleError(f"TEST failed, got {answer!r}")
+        if not self._scan_for((b"TEST", b"\n\r")):
+            raise ConsoleError("TEST failed: no response")
+
+    def stop_streaming(self) -> bool:
+        """STRMOFF — cancel any leftover streaming mode from a prior
+        session (the Java driver sent this on every connect). Non-fatal."""
+        self._port.reset_input_buffer()
+        self._port.write(b"STRMOFF\n")
+        return self._scan_for((b"OK", b"\n\r"))
 
     def read_pair(self) -> tuple[dict, dict]:
         """One (LOOP, LOOP2) decoded pair via `LPS 3 2`."""

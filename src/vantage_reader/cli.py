@@ -46,6 +46,8 @@ def main(argv: list[str] | None = None) -> int:
                 console = VantageConsole(args.port)
                 console.wake()
                 console.test()
+                if not console.stop_streaming():
+                    _log("STRMOFF unanswered (continuing)")
                 _log(f"connected to console on {args.port}")
             started = time.monotonic()
             console.wake()
