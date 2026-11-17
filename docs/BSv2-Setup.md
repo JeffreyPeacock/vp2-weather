@@ -109,6 +109,42 @@ af4ex: TX/RX crossover is where "most common wiring errors occur." BSv2 pin
 names are from the *radio's* perspective; console names are from the
 *console's*. Output always feeds input.
 
+### TCSD-10-D ribbon harness (ordered 2026-08-25; bring-up pending)
+
+Samtec **TCSD-10-D** (single-ended IDC cable assembly) replaces the
+hand-cut 2mm socket pins. It is 2×10, 20 contacts, on the 2.00mm grid —
+Samtec's dual-row assemblies count *positions per row*, so -10-D matches
+the console connector exactly. Its Tiger-Eye contacts are multi-finger
+sockets for standard 0.5mm-square 2mm header posts, which is what the
+console carries. Two things the datasheet cannot promise: that the
+socket body clears the console's recess, and orientation.
+
+Bring-up checklist when it arrives:
+
+1. **Dry fit, unpowered** — confirm it seats fully in the well.
+2. **Mark pin 1's end** on the socket body with paint/nail polish before
+   anything else — it is unkeyed, and a 180° flip puts DC-IN voltage on
+   the SPI pins.
+3. **Buzz out the ribbon** with the meter (continuity mode, red lead in
+   the VΩ jack): dual-row IDC assignment zig-zags, conductor N → pin N,
+   but verify all six that matter — **5 (RXD0), 6 (TXD0), 13/14 (VCC),
+   15/16 (GND), 18 (DC-IN)** — and label them.
+4. Terminate those six for the radio; fold back the rest.
+5. **Fold the 1k pull-up into the harness**: 1k between the pin-5
+   conductor and the pin-13/14 conductor. This is the fix for the
+   diagnosed fault — the BSv2's TX level-shifter rises through a weak
+   pull-up, giving edges too slow for the console UART (1 wake response
+   in ~78 attempts without it). The resistor references the console's
+   own 3.3V rail and stiffens the rising edges.
+6. Verify: `./scripts/vp2-probe.py --tries 30` — expect ~30/30 wake
+   responses with TEST echoing; then
+   `./scripts/vp2-read --port /dev/rfcomm0 --count 1`.
+
+**Status as of 2026-11-17: open.** The 1k pull-up result was never
+reported and the harness bring-up has not been confirmed. The first
+30-try probe after the harness goes on decides whether the
+slow-rising-edge diagnosis closes the case.
+
 Leave BSv2 RTS/CTS unconnected (flow control is off by default,
 `AT-FlowControl=0`).
 
