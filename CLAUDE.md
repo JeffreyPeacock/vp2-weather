@@ -33,11 +33,20 @@ hardcode them (the Java predecessor did; that's decision D13).
 ## Hard facts (verified; don't re-derive)
 
 - Console serial: **19200 8N1, 0–3.3V TTL**, LF wakeup (expect `\n\r`,
-  ≤3 tries), commands UPPERCASE. `LPS 3 n` streams alternating
-  LOOP/LOOP2 99-byte packets; byte 4 is the type (0/1); CRC-16/XMODEM
-  over the whole packet checks to 0.
-- BlueSMiRF v2 must be configured to 19200 (`$$$`, `AT-SerialSpeed=19200`,
-  `ATW`) — factory default is 115200 and yields silent no-data.
+  ≤3 tries), commands UPPERCASE, terminated by a single LF **or** CR —
+  never CR+LF (spec §III.1: both together fails). `LPS 3 n` streams
+  alternating LOOP/LOOP2 99-byte packets; byte 4 is the type (0/1);
+  CRC-16/XMODEM over the whole packet checks to 0. The console ignores
+  serial while any setup screen other than "Receiving From…" is shown.
+- BlueSMiRF v2 must be configured to 19200 — factory default is 115200
+  and yields silent no-data. Use `scripts/bsv2-config.py` (and
+  `--query` to read settings back). Command-mode escape: `$$$` on the
+  wired UART, **`+++` over Bluetooth**; only within the first ~60 s
+  after radio power-on (`ATZ` reboot reopens the window).
+- Hardware bring-up is **open**: the BSv2's TX rises too slowly for the
+  console UART (1 wake in ~78). Fix in progress: 1k pull-up (pin-5 net
+  → console 3.3V) in a TCSD-10-D ribbon harness. Checklist and status:
+  `docs/BSv2-Setup.md` § "TCSD-10-D ribbon harness".
 - Console expansion pinout (from back): TXD0=pin 6, RXD0=pin 5,
   VCC=13/14, GND=15/16. Console TXD0 → BSv2 RXI.
 - Deliberate deviations from the Java reference (not bugs): UV decoded
